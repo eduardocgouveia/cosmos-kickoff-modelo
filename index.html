@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KICK-OFF | COSMOS by Atacama Digital</title>
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700;800;900&family=Cormorant+Unicase:wght@500;600;700&display=swap');
+
+:root {
+  --black:#000000;--white:#FFFFFF;
+  --gray-90:#1A1A1A;--gray-80:#222222;--gray-70:#3A3A3A;--gray-60:#555555;
+  --gray-50:#959595;--gray-30:#C4C4C4;--gray-20:#D5D5D5;--gray-10:#EEEEEE;
+  --silver:#DBDCDD;
+  --cosmos-red:#9C1F27;--cosmos-red-glow:#FC7D8E;
+  --cosmos-blue-deep:#1B68B8;--cosmos-blue-mid:#5E97E4;--cosmos-blue-light:#9DB7F0;
+  --cosmos-purple:#9E8FD0;--cosmos-pink:#FC7D8E;--cosmos-bg:#030710;
+  --r-sm:4px;--r-md:8px;--r-lg:16px;--r-pill:9999px;
+}
+
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;scroll-snap-type:y mandatory;}
+body{font-family:'Inter Tight',system-ui,sans-serif;background:var(--cosmos-bg);color:var(--white);overflow-x:hidden;}
+
+/* ═══ ANIMATIONS ═══ */
+@keyframes fadeInUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+@keyframes floatSlow{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes gradientShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+@keyframes drawLine{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes drawLineV{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+@keyframes dotPop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes pulseGlow{0%,100%{opacity:0.4}50%{opacity:0.8}}
+@keyframes orbitSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+
+/* ═══ LAYOUT ═══ */
+.slide{min-height:100vh;width:100%;scroll-snap-align:start;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 48px 48px;overflow:hidden;}
+.slide--dark{background:var(--black);}
+.slide--cosmos{background:var(--cosmos-bg);}
+.slide--silver{background:var(--silver);color:var(--black);}
+.slide--desert{background:var(--black);overflow:hidden;}
+.content-full{max-width:1100px;width:100%;position:relative;z-index:2;}
+.content-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:1100px;width:100%;}
+
+/* ═══ HEADER BAR ═══ */
+.header-bar{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:12px 24px;background:rgba(0,0,0,0.85);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.06);}
+.header-left{display:flex;align-items:center;gap:16px;}
+.header-logo{height:22px;width:auto;color:white;}
+.header-divider{width:1px;height:18px;background:rgba(255,255,255,0.12);}
+.header-badge{font-size:10px;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:var(--gray-50);}
+.header-center{display:flex;align-items:center;gap:8px;}
+.header-center label{font-size:10px;color:var(--gray-50);text-transform:uppercase;letter-spacing:0.1em;}
+.header-center input{background:transparent;border:none;border-bottom:1px dashed var(--cosmos-blue-mid);color:white;font-family:'Inter Tight',sans-serif;font-size:13px;font-weight:600;padding:2px 8px;width:180px;text-align:center;outline:none;}
+.header-center input::placeholder{color:var(--gray-50);font-weight:400;}
+.header-right{display:flex;align-items:center;gap:12px;}
+#slideCounter{font-size:11px;color:var(--gray-50);font-variant-numeric:tabular-nums;}
+.progress-track{width:80px;height:2px;background:rgba(255,255,255,0.08);border-radius:2px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--cosmos-blue-mid),var(--cosmos-purple));transition:width 0.4s ease;width:0%;}
+
+/* ═══ NAV DOTS ═══ */
+.nav{position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:99;display:flex;flex-direction:column;gap:6px;align-items:flex-end;}
+.nav-item{background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:8px;padding:4px 0;}
+.nav-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.2);transition:all 0.3s ease;}
+.nav-item.active .nav-dot{background:var(--cosmos-blue-mid);box-shadow:0 0 8px rgba(94,151,228,0.4);width:8px;height:8px;}
+.nav-label{font-size:9px;color:transparent;transition:all 0.3s ease;white-space:nowrap;letter-spacing:0.05em;}
+.nav-item:hover .nav-label{color:var(--gray-50);}
+.nav-item.active .nav-label{color:var(--cosmos-blue-light);}
+
+/* ═══ TYPOGRAPHY ═══ */
+.tagline{font-family:'Cormorant Unicase',Georgia,serif;font-weight:600;letter-spacing:-0.025em;line-height:0.9;color:var(--white);}
+.eyebrow{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.25em;color:var(--gray-50);margin-bottom:8px;}
+.section-number{font-size:72px;font-weight:800;line-height:1;color:rgba(255,255,255,0.04);position:absolute;top:-10px;right:0;font-variant-numeric:tabular-nums;}
+.section-header{position:relative;}
+h2{font-family:'Inter Tight',sans-serif;font-size:36px;font-weight:800;line-height:1.1;letter-spacing:-0.02em;margin-bottom:16px;}
+h3{font-family:'Inter Tight',sans-serif;font-size:18px;font-weight:700;margin-bottom:8px;}
+.body-md{font-size:16px;line-height:1.6;color:rgba(255,255,255,0.6);}
+.body-lg{font-size:18px;line-height:1.6;color:rgba(255,255,255,0.6);}
+.gradient-text{background:linear-gradient(135deg,var(--cosmos-blue-light),var(--cosmos-purple),var(--cosmos-pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+
+/* ═══ SLIDE FOOTER ═══ */
+.slide-footer{position:absolute;bottom:16px;left:48px;right:48px;display:flex;justify-content:space-between;font-size:10px;color:var(--gray-70);letter-spacing:0.15em;z-index:2;}
+
+/* ═══ GRIDLINES ═══ */
+.slide-gridlines{position:absolute;inset:0;pointer-events:none;z-index:1;}
+.gridline{position:absolute;background:rgba(255,255,255,0.05);}
+.gridline--v{width:1px;top:0;bottom:0;}
+.gridline--h{height:1px;left:0;right:0;}
+.gridline--left{left:19.8%;}
+.gridline--right{right:19.8%;}
+.gridline--top{top:7.6%;}
+.gridline--bottom{bottom:7%;}
+.grid-dot{position:absolute;width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.15);}
+.grid-dot--tl{top:calc(7.6% - 3px);left:calc(19.8% - 3px);}
+.grid-dot--tr{top:calc(7.6% - 3px);right:calc(19.8% - 3px);}
+.grid-dot--bl{bottom:calc(7% - 3px);left:calc(19.8% - 3px);}
+.grid-dot--br{bottom:calc(7% - 3px);right:calc(19.8% - 3px);}
+.slide--silver .gridline{background:rgba(0,0,0,0.06);}
+.slide--silver .grid-dot{background:rgba(0,0,0,0.12);}
+
+/* ═══ ANIMATIONS (entry) ═══ */
+.anim-group .anim{opacity:0;transform:translateY(20px);transition:opacity 0.6s ease,transform 0.6s ease;}
+.anim-group.visible .anim{opacity:1;transform:translateY(0);}
+.anim-group.visible .anim:nth-child(2){transition-delay:0.1s;}
+.anim-group.visible .anim:nth-child(3){transition-delay:0.2s;}
+.anim-group.visible .anim:nth-child(4){transition-delay:0.3s;}
+.anim-group.visible .anim:nth-child(5){transition-delay:0.4s;}
+.anim-group.visible .anim:nth-child(6){transition-delay:0.5s;}
+
+/* ═══ CARDS ═══ */
+.card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:var(--r-md);padding:24px;}
+.card-accent{border-left:3px solid var(--cosmos-blue-mid);background:rgba(255,255,255,0.97);border:1px solid rgba(0,0,0,0.06);border-left:3px solid var(--cosmos-blue-mid);}
+.slide--silver .card{background:rgba(255,255,255,0.7);border-color:rgba(0,0,0,0.08);}
+.icon-box{width:36px;height:36px;border-radius:var(--r-md);background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;color:var(--cosmos-blue-light);margin-bottom:12px;}
+.slide--silver .icon-box{background:rgba(0,0,0,0.04);color:var(--cosmos-blue-deep);}
+
+/* ═══ BADGES ═══ */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:var(--r-pill);font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;}
+.badge--blue{background:rgba(94,151,228,0.1);color:var(--cosmos-blue-light);border:1px solid rgba(94,151,228,0.15);}
+.badge--purple{background:rgba(158,143,208,0.1);color:var(--cosmos-purple);border:1px solid rgba(158,143,208,0.15);}
+.badge--pink{background:rgba(252,125,142,0.1);color:var(--cosmos-pink);border:1px solid rgba(252,125,142,0.15);}
+.badge--red{background:rgba(156,31,39,0.1);color:var(--cosmos-red-glow);border:1px solid rgba(156,31,39,0.2);}
+.badge--dark{background:rgba(255,255,255,0.06);color:var(--gray-30);border:1px solid rgba(255,255,255,0.08);}
+
+/* ═══ QUESTIONS ═══ */
+.questions-container{display:flex;flex-direction:column;gap:10px;max-width:800px;}
+.question-block{display:flex;align-items:flex-start;gap:16px;padding:16px 20px;border-radius:var(--r-md);background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);transition:all 0.5s cubic-bezier(0.16,1,0.3,1);}
+.slide--silver .question-block{background:rgba(255,255,255,0.6);border-color:rgba(0,0,0,0.08);}
+.q-hidden{opacity:0;max-height:0;padding:0 20px;margin:0;border-color:transparent;overflow:hidden;}
+.q-revealing{opacity:1;max-height:120px;padding:16px 20px;}
+.q-number{width:28px;height:28px;border-radius:50%;background:rgba(94,151,228,0.1);color:var(--cosmos-blue-light);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.slide--silver .q-number{background:rgba(27,104,184,0.08);color:var(--cosmos-blue-deep);}
+.q-text{font-size:15px;font-weight:500;line-height:1.5;margin-bottom:4px;}
+.q-hint{font-size:11px;color:var(--gray-50);display:flex;align-items:center;gap:6px;}
+.q-hint i{width:12px;height:12px;}
+.reveal-btn{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:var(--gray-30);padding:8px 16px;border-radius:var(--r-pill);font-size:12px;font-family:'Inter Tight',sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all 0.2s ease;margin-top:8px;}
+.reveal-btn:hover{background:rgba(255,255,255,0.08);color:white;}
+.slide--silver .reveal-btn{background:rgba(0,0,0,0.04);border-color:rgba(0,0,0,0.1);color:var(--gray-60);}
+
+/* ═══ EDITABLE ═══ */
+.editable{border-bottom:1px dashed var(--cosmos-blue-mid);padding:0 4px;outline:none;transition:border-color 0.2s;}
+.editable:focus{border-bottom-color:var(--cosmos-blue-light);background:rgba(94,151,228,0.05);}
+.slide--silver .editable{border-bottom-color:var(--cosmos-blue-deep);}
+
+/* ═══ TIMELINE ═══ */
+.timeline{display:flex;flex-direction:column;gap:0;max-width:800px;}
+.timeline-item{display:flex;gap:20px;padding:16px 0;border-left:2px solid rgba(255,255,255,0.06);margin-left:14px;padding-left:24px;position:relative;}
+.timeline-item::before{content:'';position:absolute;left:-5px;top:20px;width:8px;height:8px;border-radius:50%;background:var(--cosmos-blue-mid);border:2px solid var(--cosmos-bg);}
+.timeline-content h3{font-size:15px;font-weight:600;margin-bottom:4px;}
+.timeline-content p{font-size:13px;color:var(--gray-50);line-height:1.5;}
+.timeline-sla{display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:var(--r-pill);background:rgba(94,151,228,0.08);color:var(--cosmos-blue-light);margin-top:6px;letter-spacing:0.05em;}
+
+/* ═══ CAROUSEL ═══ */
+.carousel-wrapper{position:relative;width:100%;overflow:hidden;}
+.carousel-track{display:flex;gap:16px;transition:transform 0.5s cubic-bezier(0.16,1,0.3,1);padding:4px 0;}
+.carousel-card{min-width:280px;flex-shrink:0;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:var(--r-md);padding:24px;position:relative;}
+.carousel-card-number{font-size:48px;font-weight:800;color:rgba(255,255,255,0.04);position:absolute;top:12px;right:16px;line-height:1;}
+.carousel-nav{display:flex;gap:8px;margin-top:16px;}
+.carousel-btn{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:white;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
+.carousel-btn:hover{background:rgba(255,255,255,0.12);}
+.carousel-dots{display:flex;gap:6px;align-items:center;margin-left:12px;}
+.carousel-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.15);transition:all 0.3s;}
+.carousel-dot.active{background:var(--cosmos-blue-mid);width:20px;border-radius:3px;}
+
+/* ═══ SQUAD CARDS ═══ */
+.squad-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:1100px;}
+.squad-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:var(--r-md);padding:24px;text-align:center;position:relative;overflow:hidden;}
+.squad-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;}
+.squad-card:nth-child(1)::after{background:var(--cosmos-blue-mid);}
+.squad-card:nth-child(2)::after{background:var(--cosmos-purple);}
+.squad-card:nth-child(3)::after{background:var(--cosmos-pink);}
+.squad-card:nth-child(4)::after{background:var(--cosmos-blue-light);}
+.squad-avatar{width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,0.06);margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:var(--gray-50);}
+.squad-role{font-size:11px;color:var(--gray-50);text-transform:uppercase;letter-spacing:0.1em;margin-top:4px;}
+
+/* ═══ COSMOS METHOD CARDS ═══ */
+.cosmos-phases{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:1100px;}
+.phase-card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:var(--r-md);padding:20px;position:relative;overflow:hidden;}
+.phase-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.phase-card:nth-child(1)::before{background:linear-gradient(90deg,var(--cosmos-red),var(--cosmos-red-glow));}
+.phase-card:nth-child(2)::before{background:linear-gradient(90deg,var(--cosmos-blue-deep),var(--cosmos-blue-mid));}
+.phase-card:nth-child(3)::before{background:linear-gradient(90deg,var(--cosmos-blue-mid),var(--cosmos-blue-light));}
+.phase-card:nth-child(4)::before{background:linear-gradient(90deg,var(--cosmos-purple),var(--cosmos-pink));}
+.phase-card:nth-child(5)::before{background:linear-gradient(90deg,var(--cosmos-pink),var(--cosmos-red-glow));}
+.phase-card:nth-child(6)::before{background:linear-gradient(90deg,var(--cosmos-blue-light),var(--cosmos-purple));}
+
+/* ═══ CHECKLIST ═══ */
+.checklist-item{display:flex;align-items:center;gap:10px;padding:8px 0;font-size:14px;cursor:pointer;border-bottom:1px solid rgba(0,0,0,0.04);}
+.checklist-item input[type="checkbox"]{accent-color:var(--cosmos-blue-deep);width:16px;height:16px;}
+
+/* ═══ PARTNER BADGES ═══ */
+.partner-row{display:flex;gap:24px;align-items:center;margin-top:20px;flex-wrap:wrap;}
+.partner-badge{display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:var(--r-md);background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);font-size:11px;font-weight:500;color:var(--gray-30);letter-spacing:0.03em;}
+
+/* ═══ CONTACT GRID ═══ */
+.contact-grid{display:flex;gap:24px;flex-wrap:wrap;margin-top:24px;}
+.contact-item{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--gray-50);}
+.contact-item a{color:var(--gray-30);text-decoration:none;}
+
+/* ═══ CADENCE GRID ═══ */
+.cadence-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;max-width:1100px;}
+.cadence-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:var(--r-md);padding:20px;text-align:center;}
+.cadence-icon{width:40px;height:40px;border-radius:50%;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;}
+.cadence-label{font-size:10px;text-transform:uppercase;letter-spacing:0.15em;color:var(--gray-50);margin-top:8px;}
+
+/* ═══ COVER ORBIT ═══ */
+.orbit-container{position:absolute;width:500px;height:500px;opacity:0.08;}
+.orbit-ring{position:absolute;border:1px solid rgba(255,255,255,0.3);border-radius:50%;animation:orbitSpin linear infinite;}
+.orbit-ring:nth-child(1){inset:0;animation-duration:60s;}
+.orbit-ring:nth-child(2){inset:40px;animation-duration:45s;animation-direction:reverse;}
+.orbit-ring:nth-child(3){inset:80px;animation-duration:30s;}
+
+/* ═══ DESERT BG ═══ */
+.desert-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.4) 40%,rgba(0,0,0,0.8) 100%);z-index:1;}
+.desert-gradient{position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(225,63,7,0.15) 0%,transparent 60%),radial-gradient(ellipse at 70% 30%,rgba(225,63,7,0.08) 0%,transparent 50%);z-index:1;}
+
+/* ═══ COSMOS NEBULA BG ═══ */
+.nebula-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 20% 80%,rgba(156,31,39,0.15) 0%,transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(27,104,184,0.12) 0%,transparent 50%),radial-gradient(ellipse at 50% 50%,rgba(158,143,208,0.06) 0%,transparent 60%);pointer-events:none;z-index:0;}
+
+/* ═══ GRAIN ═══ */
+.grain{position:absolute;inset:0;pointer-events:none;z-index:3;opacity:0.035;}
+.grain::before{content:'';position:absolute;inset:-50%;width:200%;height:200%;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+
+/* ═══ RESPONSIVE ═══ */
+@media(max-width:768px){
+  .slide{padding:60px 24px 32px;}
+  .content-grid,.cosmos-phases,.cadence-grid{grid-template-columns:1fr;}
+  .squad-grid{grid-template-columns:1fr 1fr;}
+  h2{font-size:28px;}
+  .tagline{font-size:32px!important;}
+  .nav{display:none;}
+  .header-center{display:none;}
+  .carousel-card{min-width:260px;}
+  .slide-footer{left:24px;right:24px;}
+}
+@media(max-width:480px){
+  .marquee-container{display:none;}
+}
+
+/* ═══ MARQUEE ═══ */
+.marquee-container{position:relative;width:100%;overflow:hidden;margin-top:32px;padding:20px 0;mask-image:linear-gradient(90deg,transparent 0%,black 10%,black 90%,transparent 100%);-webkit-mask-image:linear-gradient(90deg,transparent 0%,black 10%,black 90%,transparent 100%);}
+.marquee-track{display:flex;gap:48px;align-items:center;animation:marqueeScroll 30s linear infinite;width:max-content;}
+.marquee-logo{height:28px;width:auto;opacity:0.35;filter:grayscale(1) brightness(2);flex-shrink:0;transition:opacity 0.3s;}
+.marquee-logo:hover{opacity:0.7;}
+@keyframes marqueeScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ═══ SEAL IMAGES ═══ */
+.seal-img{height:40px;width:auto;opacity:0.85;transition:opacity 0.3s;}
+.seal-img:hover{opacity:1;}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- HEADER BAR -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<div class="header-bar">
+  <div class="header-left">
+    <svg viewBox="0 0 7440 1990" fill="currentColor" class="header-logo"><path d="m2005.83 38.68-307.87 1154h217.33L2217.95 58.23l302.65 1134.45h217.34l-307.87-1154ZM333.85 38.68l-307.87 1154h217.34L545.97 58.23l302.66 1134.45h217.33L758.1 38.68ZM4201.22 38.68l-307.87 1154h217.34L4413.34 58.23 4716 1192.68h217.34l-307.88-1154ZM1789.08 38.68H986.93V233h292.17v959.67h216.6V233.01h293.38ZM6686.55 38.68l-307.87 1154h217.34L6898.68 58.23l302.65 1134.45h217.34l-307.87-1154ZM5666.44 669.03 5490.98 38.7l-424.07-.03v1154h216.61V76.19l170.24 611.58h425.36l170.24-611.58v1116.49h216.6v-1154l-424.06.03ZM3524.06 969.29c-57.57 37.2-122.85 54.25-184.81 54.25-70.32 0-135.16-17.8-192.72-52.89-118.62-72.31-186.66-201.97-186.66-355.72 0-217.76 130.5-319.58 186.6-353.25 57.61-34.59 122.47-52.12 192.78-52.12 6.32 0 98.34.97 184.8 52.06 117.68 69.54 140.24 189.95 140.24 189.95h216.55c0-.02-8.62-118.66-96.5-230.45-102.2-130-264.43-204.57-445.1-204.57-108.53 0-208.94 26.43-298.4 78.57-85.13 49.6-156.39 120.44-206.07 204.88-54.76 93.06-82.53 199.02-82.53 314.93 0 220.57 107.87 415.8 288.55 522.21 89.45 52.7 189.87 79.41 298.46 79.41 177.7 0 341.62-77.36 443.55-210.35 87.52-114.2 101.64-240.9 101.64-240.9h-218.88s-21.46 126.43-141.5 203.99"/><path d="M5012.48 1887.38h-75.22v-346.3h77.6c144.03 0 156.54 111.7 156.54 172.81 0 164.66-109.64 173.5-158.92 173.5m7.8-425.6h-174.51v504.88h171.45c227.25 0 244.65-191.38 244.65-252.78 0-130.66-67.39-252.1-241.6-252.1M5339.53 1966.67h91.49V1461.8h-91.5ZM5752.3 1774.21h119.48c-.28 29.05-15.86 117.24-128.28 117.24-38.57 0-142.66-16.75-142.66-177.56 0-112.15 59.46-176.87 142.66-176.87 69.86 0 109.38 42.84 121.64 86.07h92.84c-10.4-67.22-72.64-168.07-215.84-168.07-77.48 0-233.12 45.2-233.12 259.9 0 75.01 35.51 258.53 233.8 258.53 62.3 0 108.1-23.47 144-65.74h2.38l6.78 58.96h65.73v-263.96h-209.4ZM6041.07 1966.67h91.48V1461.8h-91.48ZM6603.62 1461.8h-402.55v76.58h156.2v428.3h90.48v-428.3h155.87ZM6742.38 1768.79l68-203.3h4.07l68.34 203.3Zm14.12-307-178.23 504.88h97.93l41.7-124.69h189.49l41.91 124.7h97.59l-177.9-504.88ZM7196.05 1890.1v-428.3h-91.49v504.87h314.1v-76.58Z"/></svg>
+    <div class="header-divider"></div>
+    <span class="header-badge">Kick-off</span>
+  </div>
+  <div class="header-center">
+    <label>Cliente:</label>
+    <input type="text" id="clientNameInput" placeholder="Nome do Cliente" autocomplete="off">
+  </div>
+  <div class="header-right">
+    <span id="slideCounter">01 / 15</span>
+    <div class="progress-track"><div class="progress-fill" id="progressBar"></div></div>
+  </div>
+</div>
+
+<!-- NAV DOTS -->
+<nav class="nav" id="nav"></nav>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 01: CAPA (estilo atacama.digital hero) -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<section class="slide slide--dark" id="slide-0" data-nav="Capa" style="padding:0;">
+  <!-- Background image -->
+  <div style="position:absolute;inset:0;z-index:0;">
+    <img src="atacama-digital-canyons.webp" alt="" style="width:100%;height:100%;object-fit:cover;object-position:center 40%;">
+  </div>
+  <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.55) 0%,rgba(0,0,0,0.3) 35%,rgba(0,0,0,0.5) 70%,rgba(0,0,0,0.85) 100%);z-index:1;"></div>
+  <div class="slide-gridlines" style="z-index:2;opacity:0.5;">
+    <div class="gridline gridline--v gridline--left"></div>
+    <div class="gridline gridline--v gridline--right"></div>
+    <div class="gridline gridline--h gridline--top"></div>
+    <div class="gridline gridline--h gridline--bottom"></div>
+    <div class="grid-dot grid-dot--tl"></div>
+    <div class="grid-dot grid-dot--tr"></div>
+    <div class="grid-dot grid-dot--bl"></div>
+    <div class="grid-dot grid-dot--br"></div>
+  </div>
+  <div class="anim-group" style="display:flex;flex-direction:column;align-items:center;text-align:center;z-index:3;padding:80px 48px 48px;">
+    <!-- COSMOS product logo: [Symbol] COSMOS ^(by ATACAMA DIGITAL) -->
+    <div class="anim" style="display:flex;align-items:center;gap:12px;margin-bottom:32px;">
+      <svg viewBox="0 0 1211 1250" fill="currentColor" style="width:32px;height:auto;color:var(--white);opacity:0.7;"><path d="M731.04 750.75H474.85l-186.77 453.94h93.7l178.57-443.74v443.73h85.2V760.95l178.57 443.74h93.7z"/><path d="M731.05 494.56v89.6l.01-.01v77h-.01v89.6L1185 937.53v-93.71L741.25 665.26h443.74v-85.21H741.25L1185 401.48v-93.7z"/><path d="M474.86 494.56h89.6v-.01h77v.01h89.59L917.83 40.62h-93.7L645.56 484.36V40.62h-85.21v443.74L381.79 40.62h-93.7zM474.85 750.75V494.56L20.91 307.78v93.7l443.74 178.57H20.91v85.21h443.74L20.91 843.82v93.7z"/></svg>
+      <span style="display:flex;align-items:flex-start;">
+        <span style="font-family:'Inter Tight',sans-serif;font-size:22px;font-weight:400;letter-spacing:0.05em;color:var(--white);opacity:0.9;">COSMOS</span>
+        <span style="margin-left:6px;margin-top:2px;display:flex;align-items:center;gap:4px;">
+          <span style="font-size:9px;color:rgba(255,255,255,0.5);">by</span>
+          <svg viewBox="0 0 10180 1240" fill="currentColor" style="height:9px;width:auto;color:rgba(255,255,255,0.6);"><path d="m2005.83 42.13-307.87 1154h217.33L2217.95 61.68l302.65 1134.45h217.34l-307.87-1154ZM333.85 42.13l-307.87 1154h217.34L545.97 61.68l302.66 1134.45h217.33L758.1 42.13ZM4201.22 42.13l-307.87 1154h217.34L4413.34 61.68 4716 1196.13h217.34l-307.88-1154ZM1789.08 42.13H986.93v194.33h292.17v959.67h216.6V236.46h293.38ZM6686.55 42.13l-307.87 1154h217.34L6898.68 61.68l302.65 1134.45h217.34l-307.87-1154ZM5666.44 672.48 5490.98 42.16l-424.07-.03v1154h216.61V79.64l170.24 611.58h425.36l170.24-611.58v1116.49h216.6v-1154l-424.06.03ZM3524.06 972.73c-57.57 37.2-122.85 54.25-184.81 54.25-70.32 0-135.16-17.8-192.72-52.88-118.62-72.31-186.66-201.97-186.66-355.72 0-217.76 130.5-319.58 186.6-353.25 57.61-34.59 122.47-52.12 192.78-52.12 6.32 0 98.34.96 184.8 52.06 117.68 69.54 140.24 189.95 140.24 189.95h216.55c0-.02-8.62-118.66-96.5-230.45C3682.14 94.57 3519.91 20 3339.24 20c-108.53 0-208.94 26.43-298.4 78.57-85.13 49.6-156.39 120.44-206.07 204.88-54.76 93.06-82.53 199.02-82.53 314.93 0 220.57 107.87 415.8 288.55 522.21 89.45 52.7 189.87 79.41 298.46 79.41 177.7 0 341.62-77.36 443.55-210.36 87.52-114.2 101.64-240.9 101.64-240.9h-218.88s-21.46 126.44-141.5 204"/><path d="M7747.83 467.71h-75.22v-346.3h77.6c144.03 0 156.54 111.7 156.54 172.81 0 164.66-109.64 173.5-158.92 173.5m7.8-425.6h-174.5V547h171.45c227.24 0 244.64-191.38 244.64-252.78 0-130.66-67.38-252.1-241.6-252.1M8074.88 547h91.49V42.13h-91.49ZM8487.66 354.54h119.47c-.28 29.05-15.86 117.24-128.28 117.24-38.56 0-142.65-16.75-142.65-177.56 0-112.15 59.46-176.87 142.65-176.87 69.87 0 109.38 42.84 121.65 86.06h92.84c-10.4-67.21-72.65-168.06-215.84-168.06-77.49 0-233.13 45.2-233.13 259.9 0 75 35.52 258.53 233.8 258.53 62.3 0 108.1-23.46 144.01-65.74h2.37l6.78 58.96h65.74V283.04h-209.41ZM8776.42 547h91.49V42.13h-91.49ZM9338.97 42.13h-402.54v76.57h156.2V547h90.47V118.7h155.87ZM9477.73 349.12l68-203.3h4.07l68.34 203.3Zm14.13-307L9313.62 547h97.93l41.7-124.7h189.5l41.9 124.7h97.6l-177.9-504.87ZM9931.4 470.42V42.12h-91.49V547h314.11v-76.58Zm0 0"/></svg>
+        </span>
+      </span>
+    </div>
+    <h1 class="anim tagline" style="font-size:64px;margin-bottom:16px;">KICK-OFF</h1>
+    <p class="anim tagline" style="font-size:32px;opacity:0.75;margin-bottom:8px;">Welcome to Clarity.</p>
+    <p class="anim body-lg" style="max-width:480px;text-align:center;margin-top:8px;">Seu marketing gera dados.<br>O nosso gera decisões.</p>
+    <div class="anim" style="width:48px;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent);margin:28px auto;"></div>
+    <div class="anim" style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;justify-content:center;">
+      <span class="badge badge--blue"><span class="client-name-display">CLIENTE</span></span>
+      <span class="badge badge--dark"><span class="editable" contenteditable="true" style="min-width:60px;">Tier A</span></span>
+      <span class="badge badge--dark"><span class="editable" contenteditable="true" style="min-width:100px;">Performance + Social + AV</span></span>
+    </div>
+    <p class="anim" style="margin-top:20px;font-size:12px;color:var(--gray-50);"><span class="editable" contenteditable="true">20 de março de 2026</span></p>
+  </div>
+  <p style="position:absolute;bottom:20px;left:48px;font-size:10px;color:rgba(255,255,255,0.3);letter-spacing:0.15em;z-index:3;">8&deg;02'36.6" S / 34&deg;53'53.5" W</p>
+  <div class="slide-footer" style="z-index:3;"><span>ATACAMA.DIGITAL</span><span>01 / 15</span></div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 02: QUEM SOMOS (ATACAMA identity — desert bg) -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<section class="slide slide--desert" id="slide-1" data-nav="Quem Somos">
+  <div style="position:absolute;inset:0;background:linear-gradient(135deg,#1a0f08 0%,#0d0805 40%,#000 100%);z-index:0;"></div>
+  <div class="desert-gradient"></div>
+  <div class="slide-gridlines" style="z-index:2;">
+    <div class="gridline gridline--v gridline--left" style="background:rgba(225,63,7,0.06);"></div>
+    <div class="gridline gridline--v gridline--right" style="background:rgba(225,63,7,0.06);"></div>
+    <div class="grid-dot grid-dot--tl" style="background:rgba(225,63,7,0.2);"></div>
+    <div class="grid-dot grid-dot--tr" style="background:rgba(225,63,7,0.2);"></div>
+  </div>
+  <div class="grain"></div>
+  <div class="content-full anim-group" style="z-index:3;">
+    <div class="anim section-header">
+      <div class="section-number">02</div>
+      <p class="eyebrow" style="color:rgba(225,63,7,0.6);">Bem-vindo(a) à Atacama Digital</p>
+      <h2 class="tagline" style="font-size:44px;">Hoje começa a sua<br>conquista do futuro.</h2>
+      <p class="body-lg" style="max-width:620px;margin-top:12px;">Somos uma agência de performance e estratégia digital senior. Google Partner Premier — entre o top 3% das melhores agências do Brasil. Há 15 anos transformando dados em decisões que geram crescimento real.</p>
+    </div>
+    <!-- Números de impacto -->
+    <div class="anim" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:32px;max-width:800px;">
+      <div style="text-align:center;">
+        <p style="font-size:36px;font-weight:800;letter-spacing:-0.02em;">15+</p>
+        <p style="font-size:11px;color:var(--gray-50);text-transform:uppercase;letter-spacing:0.1em;margin-top:4px;">Anos</p>
+      </div>
+      <div style="text-align:center;">
+        <p style="font-size:36px;font-weight:800;letter-spacing:-0.02em;">250+</p>
+        <p style="font-size:11px;color:var(--gray-50);text-transform:uppercase;letter-spacing:0.1em;margin-top:4px;">Clientes</p>
+      </div>
+      <div style="text-align:center;">
+        <p style="font-size:36px;font-weight:800;letter-spacing:-0.02em;">50M+</p>
+        <p style="font-size:11px;color:var(--gray-50);text-transform:uppercase;letter-spacing:0.1em;margin-top:4px;">Investimento gerido</p>
+      </div>
+      <div style="text-align:center;">
+        <p style="font-size:36px;font-weight:800;letter-spacing:-0.02em;">Top 3%</p>
+        <p style="font-size:11px;color:var(--gray-50);text-transform:uppercase;letter-spacing:0.1em;margin-top:4px;">Google Partner</p>
+      </div>
+    </div>
+    <!-- Selos dos parceiros (imagens reais) -->
+    <div class="anim partner-row">
+      <div class="partner-badge" style="padding:4px 10px;background:transparent;border:none;">
+        <a href="https://www.google.com/partners/agency?id=5810903296" target="_blank" rel="noopener noreferrer">
+          <img src="https://www.gstatic.com/partners/badge/images/2025/PremierBadgeClickable.svg" alt="Google Partner Premier" class="seal-img" style="height:56px;">
+        </a>
+      </div>
+      <div class="partner-badge" style="padding:4px 10px;">
+        <img src="assets/seals/meta-partner.png" alt="Meta Business Partner" class="seal-img" style="height:32px;">
+      </div>
+      <div class="partner-badge" style="padding:4px 10px;">
+        <img src="assets/seals/rd-station-partner.png" alt="RD Station Partner" class="seal-img" style="height:32px;">
+      </div>
+    </div>
+    <!-- Client Logos Marquee -->
+    <div class="anim marquee-container">
+      <div class="marquee-track">
+        <img src="assets/clients/grautecnico.webp" alt="Grau Técnico" class="marquee-logo">
+        <img src="assets/clients/ecopostos.webp" alt="Ecopostos" class="marquee-logo">
+        <img src="assets/clients/mfmo.webp" alt="MFMO" class="marquee-logo">
+        <img src="assets/clients/lg-apoio.webp" alt="LG Apoio" class="marquee-logo">
+        <img src="assets/clients/noronhapousadas.webp" alt="Noronha Pousadas" class="marquee-logo">
+        <img src="assets/clients/ortoestetica.webp" alt="Ortoestética" class="marquee-logo">
+        <img src="assets/clients/villa.webp" alt="Villa" class="marquee-logo">
+        <img src="assets/clients/fpsfisio.webp" alt="FPS Fisio" class="marquee-logo">
+        <img src="assets/clients/hvh.webp" alt="HVH" class="marquee-logo">
+        <img src="assets/clients/gotree.webp" alt="GoTree" class="marquee-logo">
+        <img src="assets/clients/aslan-idiomas.webp" alt="Aslan Idiomas" class="marquee-logo">
+        <img src="assets/clients/redu.webp" alt="Redu" class="marquee-logo">
+        <img src="assets/clients/prodoctor.webp" alt="ProDoctor" class="marquee-logo">
+        <img src="assets/clients/vivaz.webp" alt="Vivaz" class="marquee-logo">
+        <img src="assets/clients/zetaloc.webp" alt="Zetaloc" class="marquee-logo">
+        <!-- duplicate for seamless loop -->
+        <img src="assets/clients/grautecnico.webp" alt="Grau Técnico" class="marquee-logo">
+        <img src="assets/clients/ecopostos.webp" alt="Ecopostos" class="marquee-logo">
+        <img src="assets/clients/mfmo.webp" alt="MFMO" class="marquee-logo">
+        <img src="assets/clients/lg-apoio.webp" alt="LG Apoio" class="marquee-logo">
+        <img src="assets/clients/noronhapousadas.webp" alt="Noronha Pousadas" class="marquee-logo">
+        <img src="assets/clients/ortoestetica.webp" alt="Ortoestética" class="marquee-logo">
+        <img src="assets/clients/villa.webp" alt="Villa" class="marquee-logo">
+        <img src="assets/clients/fpsfisio.webp" alt="FPS Fisio" class="marquee-logo">
+        <img src="assets/clients/hvh.webp" alt="HVH" class="marquee-logo">
+        <img src="assets/clients/gotree.webp" alt="GoTree" class="marquee-logo">
+        <img src="assets/clients/aslan-idiomas.webp" alt="Aslan Idiomas" class="marquee-logo">
+        <img src="assets/clients/redu.webp" alt="Redu" class="marquee-logo">
+        <img src="assets/clients/prodoctor.webp" alt="ProDoctor" class="marquee-logo">
+        <img src="assets/clients/vivaz.webp" alt="Vivaz" class="marquee-logo">
+        <img src="assets/clients/zetaloc.webp" alt="Zetaloc" class="marquee-logo">
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>ATACAMA.DIGITAL</span><span>02 / 15</span></div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 03: O QUE É ESTE CONTRATO -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<section class="slide slide--dark" id="slide-2" data-nav="Contrato">
+  <div class="slide-gridlines">
+    <div class="gridline gridline--v gridline--left"></div>
+    <div class="gridline gridline--v gridline--right"></div>
+    <div class="grid-dot grid-dot--tl"></div>
+    <div class="grid-dot grid-dot--tr"></div>
+  </div>
+  <div class="content-full anim-group">
+    <div class="anim section-header">
+      <div class="section-number">03</div>
+      <p class="eyebrow">Para que não haja dúvidas desde o primeiro dia</p>
+      <h2>O que você <span class="gradient-text">contratou</span></h2>
+    </div>
+    <div class="anim content-grid" style="margin-top:20px;">
+      <div class="card" style="border-top:2px solid var(--cosmos-blue-mid);">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+          <div class="icon-box" style="margin-bottom:0;"><i data-lucide="check-circle" style="width:18px;height:18px;"></i></div>
+          <h3 style="margin-bottom:0;color:var(--cosmos-blue-light);">Incluso no contrato</h3>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;" id="inclusos">
+          <p style="font-size:14px;color:var(--gray-30);display:flex;align-items:center;gap:8px;"><i data-lucide="check" style="width:14px;height:14px;color:var(--cosmos-blue-mid);flex-shrink:0;"></i> <span class="editable" contenteditable="true">Tráfego pago (Google + Meta)</span></p>
+          <p style="font-size:14px;color:var(--gray-30);display:flex;align-items:center;gap:8px;"><i data-lucide="check" style="width:14px;height:14px;color:var(--cosmos-blue-mid);flex-shrink:0;"></i> <span class="editable" contenteditable="true">6 criativos por mês (adaptados por canal)</span></p>
+          <p style="font-size:14px;color:var(--gray-30);display:flex;align-items:center;gap:8px;"><i data-lucide="check" style="width:14px;height:14px;color:var(--cosmos-blue-mid);flex-shrink:0;"></i> <span class="editable" contenteditable="true">12 posts de conteúdo (Reels + estáticos + carrosséis)</span></p>
+          <p style="font-size:14px;color:var(--gray-30);display:flex;align-items:center;gap:8px;"><i data-lucide="check" style="width:14px;height:14px;color:var(--cosmos-blue-mid);flex-shrink:0;"></i> <span class="editable" contenteditable="true">1 diária audiovisual (até 5h)</span></p>
+          <p style="font-size:14px;color:var(--gray-30);display:flex;align-items:center;gap:8px;"><i data-lucide="check" style="width:14px;height:14px;color:var(--cosmos-blue-mid);flex-shrink:0;"></i> <span class="editable" contenteditable="true">Landing pages otimizadas por canal</span></p>
+          <p style="font-size:14px;color:var(--gray-30);display:flex;align-items:center;gap:8px;"><i data-lucide="check" style="width:14px;height:14px;color:var(--cosmos-blue-mid);flex-shrink:0;"></i> <span class="editable" contenteditable="true">Planejamento editorial</span></p>
+          <p style="font-size:14px;color:var(--gray-30);display:flex;align-items:center;gap:8px;"><i data-lucide="check" style="width:14px;height:14px;color:var(--cosmos-blue-mid);flex-shrink:0;"></i> <span class="editable" contenteditable="true">Dashboard de acompanhamento em tempo real</span></p>
+          <p style="font-size:14px;color:var(--gray-30);display:flex;align-items:center;gap:8px;"><i data-lucide="check" style="width:14px;height:14px;color:var(--cosmos-blue-mid);flex-shrink:0;"></i> <span class="editable" contenteditable="true">CS dedicado + Cosmos Review trimestral</span></p>
+        </div>
+      </div>
+      <div class="card" style="border-top:2px solid rgba(255,255,255,0.1);">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+          <div class="icon-box" style="margin-bottom:0;color:var(--gray-50);"><i data-lucide="x-circle" style="width:18px;height:18px;"></i></div>
+          <h3 style="margin-bottom:0;color:var(--gray-50);">Não incluso</h3>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;" id="nao-inclusos">
+          <p style="font-size:14px;color:var(--gray-60);display:flex;align-items:center;gap:8px;"><i data-lucide="x" style="width:14px;height:14px;color:var(--gray-70);flex-shrink:0;"></i> <span class="editable" contenteditable="true">Automações e fluxos de e-mail</span></p>
+          <p style="font-size:14px;color:var(--gray-60);display:flex;align-items:center;gap:8px;"><i data-lucide="x" style="width:14px;height:14px;color:var(--gray-70);flex-shrink:0;"></i> <span class="editable" contenteditable="true">SEO e marketing de conteúdo no site</span></p>
+          <p style="font-size:14px;color:var(--gray-60);display:flex;align-items:center;gap:8px;"><i data-lucide="x" style="width:14px;height:14px;color:var(--gray-70);flex-shrink:0;"></i> <span class="editable" contenteditable="true">Desenvolvimento de site institucional</span></p>
+          <p style="font-size:14px;color:var(--gray-60);display:flex;align-items:center;gap:8px;"><i data-lucide="x" style="width:14px;height:14px;color:var(--gray-70);flex-shrink:0;"></i> <span class="editable" contenteditable="true">Gestão de inbox / SAC no Instagram</span></p>
+          <p style="font-size:14px;color:var(--gray-60);display:flex;align-items:center;gap:8px;"><i data-lucide="x" style="width:14px;height:14px;color:var(--gray-70);flex-shrink:0;"></i> <span class="editable" contenteditable="true">CRM e automação de vendas</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>ATACAMA.DIGITAL</span><span>03 / 15</span></div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 04: SUA SQUAD -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<section class="slide slide--dark" id="slide-3" data-nav="Squad">
+  <div class="slide-gridlines">
+    <div class="gridline gridline--v gridline--left"></div>
+    <div class="gridline gridline--v gridline--right"></div>
+  </div>
+  <div class="content-full anim-group">
+    <div class="anim section-header">
+      <div class="section-number">04</div>
+      <p class="eyebrow">Seu time dedicado</p>
+      <h2>Sua Squad <span class="gradient-text">Atacama</span></h2>
+      <p class="body-md" style="max-width:500px;">Estes são os especialistas responsáveis pelo sucesso do seu projeto.</p>
+    </div>
+    <div class="anim squad-grid" style="margin-top:24px;">
+      <div class="squad-card">
+        <div class="squad-avatar"><span class="editable" contenteditable="true">CF</span></div>
+        <h3 style="font-size:15px;"><span class="editable" contenteditable="true">Carol Falcão</span></h3>
+        <span class="badge badge--blue" style="font-size:9px;">CS & Gestora</span>
+        <p class="squad-role"><span class="editable" contenteditable="true">Ponto focal do projeto</span></p>
+      </div>
+      <div class="squad-card">
+        <div class="squad-avatar"><span class="editable" contenteditable="true">DF</span></div>
+        <h3 style="font-size:15px;"><span class="editable" contenteditable="true">Drielly Freitas</span></h3>
+        <span class="badge badge--purple" style="font-size:9px;">Coordenação</span>
+        <p class="squad-role"><span class="editable" contenteditable="true">Coordenadora do núcleo</span></p>
+      </div>
+      <div class="squad-card">
+        <div class="squad-avatar"><span class="editable" contenteditable="true">MA</span></div>
+        <h3 style="font-size:15px;"><span class="editable" contenteditable="true">Marcel Alves</span></h3>
+        <span class="badge badge--pink" style="font-size:9px;">Criativo</span>
+        <p class="squad-role"><span class="editable" contenteditable="true">Social media & conteúdo</span></p>
+      </div>
+      <div class="squad-card">
+        <div class="squad-avatar"><span class="editable" contenteditable="true">EG</span></div>
+        <h3 style="font-size:15px;"><span class="editable" contenteditable="true">Eduardo Gouveia</span></h3>
+        <span class="badge badge--dark" style="font-size:9px;">CEO</span>
+        <p class="squad-role"><span class="editable" contenteditable="true">Estratégia & performance</span></p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>ATACAMA.DIGITAL</span><span>04 / 15</span></div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 05: MÉTODO COSMOS -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<section class="slide slide--cosmos" id="slide-4" data-nav="Método COSMOS">
+  <div class="nebula-bg"></div>
+  <div class="grain"></div>
+  <div class="slide-gridlines">
+    <div class="gridline gridline--v gridline--left"></div>
+    <div class="gridline gridline--v gridline--right"></div>
+    <div class="gridline gridline--h gridline--top"></div>
+    <div class="gridline gridline--h gridline--bottom"></div>
+    <div class="grid-dot grid-dot--tl"></div>
+    <div class="grid-dot grid-dot--tr"></div>
+    <div class="grid-dot grid-dot--bl"></div>
+    <div class="grid-dot grid-dot--br"></div>
+  </div>
+  <div class="content-full anim-group" style="z-index:2;">
+    <div class="anim section-header" style="text-align:center;margin-bottom:32px;">
+      <!-- COSMOS product logo: [Symbol] COSMOS ^(by ATACAMA DIGITAL) -->
+      <div style="display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:20px;">
+        <svg viewBox="0 0 1211 1250" fill="currentColor" style="width:36px;height:auto;color:var(--cosmos-blue-light);opacity:0.8;"><path d="M731.04 750.75H474.85l-186.77 453.94h93.7l178.57-443.74v443.73h85.2V760.95l178.57 443.74h93.7z"/><path d="M731.05 494.56v89.6l.01-.01v77h-.01v89.6L1185 937.53v-93.71L741.25 665.26h443.74v-85.21H741.25L1185 401.48v-93.7z"/><path d="M474.86 494.56h89.6v-.01h77v.01h89.59L917.83 40.62h-93.7L645.56 484.36V40.62h-85.21v443.74L381.79 40.62h-93.7zM474.85 750.75V494.56L20.91 307.78v93.7l443.74 178.57H20.91v85.21h443.74L20.91 843.82v93.7z"/></svg>
+        <span style="display:flex;align-items:flex-start;">
+          <span style="font-family:'Inter Tight',sans-serif;font-size:24px;font-weight:400;letter-spacing:0.05em;color:var(--white);opacity:0.9;">COSMOS</span>
+          <span style="margin-left:6px;margin-top:2px;display:flex;align-items:center;gap:4px;">
+            <span style="font-size:9px;color:rgba(255,255,255,0.5);">by</span>
+            <svg viewBox="0 0 10180 1240" fill="currentColor" style="height:9px;width:auto;color:rgba(255,255,255,0.6);"><path d="m2005.83 42.13-307.87 1154h217.33L2217.95 61.68l302.65 1134.45h217.34l-307.87-1154ZM333.85 42.13l-307.87 1154h217.34L545.97 61.68l302.66 1134.45h217.33L758.1 42.13ZM4201.22 42.13l-307.87 1154h217.34L4413.34 61.68 4716 1196.13h217.34l-307.88-1154ZM1789.08 42.13H986.93v194.33h292.17v959.67h216.6V236.46h293.38ZM6686.55 42.13l-307.87 1154h217.34L6898.68 61.68l302.65 1134.45h217.34l-307.87-1154ZM5666.44 672.48 5490.98 42.16l-424.07-.03v1154h216.61V79.64l170.24 611.58h425.36l170.24-611.58v1116.49h216.6v-1154l-424.06.03ZM3524.06 972.73c-57.57 37.2-122.85 54.25-184.81 54.25-70.32 0-135.16-17.8-192.72-52.88-118.62-72.31-186.66-201.97-186.66-355.72 0-217.76 130.5-319.58 186.6-353.25 57.61-34.59 122.47-52.12 192.78-52.12 6.32 0 98.34.96 184.8 52.06 117.68 69.54 140.24 189.95 140.24 189.95h216.55c0-.02-8.62-118.66-96.5-230.45C3682.14 94.57 3519.91 20 3339.24 20c-108.53 0-208.94 26.43-298.4 78.57-85.13 49.6-156.39 120.44-206.07 204.88-54.76 93.06-82.53 199.02-82.53 314.93 0 220.57 107.87 415.8 288.55 522.21 89.45 52.7 189.87 79.41 298.46 79.41 177.7 0 341.62-77.36 443.55-210.36 87.52-114.2 101.64-240.9 101.64-240.9h-218.88s-21.46 126.44-141.5 204"/><path d="M7747.83 467.71h-75.22v-346.3h77.6c144.03 0 156.54 111.7 156.54 172.81 0 164.66-109.64 173.5-158.92 173.5m7.8-425.6h-174.5V547h171.45c227.24 0 244.64-191.38 244.64-252.78 0-130.66-67.38-252.1-241.6-252.1M8074.88 547h91.49V42.13h-91.49ZM8487.66 354.54h119.47c-.28 29.05-15.86 117.24-128.28 117.24-38.56 0-142.65-16.75-142.65-177.56 0-112.15 59.46-176.87 142.65-176.87 69.87 0 109.38 42.84 121.65 86.06h92.84c-10.4-67.21-72.65-168.06-215.84-168.06-77.49 0-233.13 45.2-233.13 259.9 0 75 35.52 258.53 233.8 258.53 62.3 0 108.1-23.46 144.01-65.74h2.37l6.78 58.96h65.74V283.04h-209.41ZM8776.42 547h91.49V42.13h-91.49ZM9338.97 42.13h-402.54v76.57h156.2V547h90.47V118.7h155.87ZM9477.73 349.12l68-203.3h4.07l68.34 203.3Zm14.13-307L9313.62 547h97.93l41.7-124.7h189.5l41.9 124.7h97.6l-177.9-504.87ZM9931.4 470.42V42.12h-91.49V547h314.11v-76.58Zm0 0"/></svg>
+          </span>
+        </span>
+      </div>
+      <p class="eyebrow" style="color:var(--cosmos-blue-light);">Metodologia proprietária</p>
+      <h2 style="font-size:40px;">Método <span class="gradient-text">COSMOS</span></h2>
+      <p class="body-md" style="max-width:600px;margin:0 auto;">Transformamos variáveis incertas em previsibilidade de crescimento através de ciclos de 90 dias.</p>
+    </div>
+    <div class="anim cosmos-phases">
+      <div class="phase-card">
+        <div class="icon-box"><i data-lucide="scan-search" style="width:18px;height:18px;"></i></div>
+        <h3 style="font-size:14px;">Imersão</h3>
+        <p style="font-size:12px;color:var(--gray-50);line-height:1.5;">Mergulho profundo no negócio, mercado e concorrência.</p>
+      </div>
+      <div class="phase-card">
+        <div class="icon-box"><i data-lucide="map" style="width:18px;height:18px;"></i></div>
+        <h3 style="font-size:14px;">Mapeamento</h3>
+        <p style="font-size:12px;color:var(--gray-50);line-height:1.5;">Quick wins, gargalos e oportunidades priorizadas.</p>
+      </div>
+      <div class="phase-card">
+        <div class="icon-box"><i data-lucide="rocket" style="width:18px;height:18px;"></i></div>
+        <h3 style="font-size:14px;">Execução</h3>
+        <p style="font-size:12px;color:var(--gray-50);line-height:1.5;">Estratégia ganha tração visual e técnica.</p>
+      </div>
+      <div class="phase-card">
+        <div class="icon-box"><i data-lucide="activity" style="width:18px;height:18px;"></i></div>
+        <h3 style="font-size:14px;">Monitoramento</h3>
+        <p style="font-size:12px;color:var(--gray-50);line-height:1.5;">Dados em tempo real via Compass e Performance.</p>
+      </div>
+      <div class="phase-card">
+        <div class="icon-box"><i data-lucide="trending-up" style="width:18px;height:18px;"></i></div>
+        <h3 style="font-size:14px;">Escalonamento</h3>
+        <p style="font-size:12px;color:var(--gray-50);line-height:1.5;">Expansão e crescimento baseado em ROI validado.</p>
+      </div>
+      <div class="phase-card" style="background:rgba(158,143,208,0.05);border-color:rgba(158,143,208,0.15);">
+        <div class="icon-box" style="color:var(--cosmos-purple);"><i data-lucide="refresh-cw" style="width:18px;height:18px;"></i></div>
+        <h3 style="font-size:14px;color:var(--cosmos-purple);">Cosmos Review</h3>
+        <p style="font-size:12px;color:var(--gray-50);line-height:1.5;">Dia 90: retrospectiva completa e nova FO.</p>
+      </div>
+    </div>
+    <div class="anim" style="text-align:center;margin-top:20px;">
+      <p style="font-size:12px;color:var(--gray-50);font-style:italic;">"O plano define o destino. A execução dita a velocidade."</p>
+    </div>
+  </div>
+  <div class="slide-footer"><span>ATACAMA.DIGITAL</span><span>05 / 15</span></div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 06: ONBOARDING (carousel horizontal) -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<section class="slide slide--dark" id="slide-5" data-nav="Onboarding">
+  <div class="slide-gridlines">
+    <div class="gridline gridline--v gridline--left"></div>
+    <div class="gridline gridline--v gridline--right"></div>
+  </div>
+  <div class="content-full anim-group">
+    <div class="anim section-header">
+      <div class="section-number">06</div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+        <span class="badge badge--blue">Etapa 1</span>
+        <span style="font-size:11px;color:var(--gray-50);">10 dias</span>
+      </div>
+      <h2>Onboarding</h2>
+      <p class="body-md" style="max-width:600px;">A fundação estratégica do projeto. Cinco estágios para garantir que tudo comece certo.</p>
+    </div>
+    <div class="anim carousel-wrapper" data-carousel>
+      <div class="carousel-track">
+        <div class="carousel-card">
+          <div class="carousel-card-number">01</div>
+          <div class="icon-box"><i data-lucide="folder-open" style="width:18px;height:18px;"></i></div>
+          <h3 style="font-size:14px;">Abertura & Estruturação</h3>
+          <p style="font-size:12px;color:var(--gray-50);line-height:1.5;">Setup do ambiente de gestão, abertura dos canais oficiais e alocação da squad dedicada.</p>
+          <span class="timeline-sla" style="margin-top:12px;">24h</span>
+        </div>
+        <div class="carousel-card">
+          <div class="carousel-card-number">02</div>
+          <div class="icon-box"><i data-lucide="settings" style="width:18px;height:18px;"></i></div>
+          <h3 style="font-size:14px;">Setup Técnico</h3>
+          <p style="font-size:12px;color:var(--gray-50);line-height:1.5;">Configuração de contas de anúncios, pixels, tags de rastreamento e integrações.</p>
+          <span class="timeline-sla" style="margin-top:12px;">48h</span>
+        </div>
+        <div class="carousel-card">
+          <div class="carousel-card-number">03</div>
+          <div class="icon-box"><i data-lucide="scan-search" style="width:18px;height:18px;"></i></div>
+          <h3 style="font-size:14px;">Imersão & Diagnóstico</h3>
+          <p style="font-size:12px;color:var(--gray-50);line-height:1.5;">Mergulho no ecossistema do cliente: dados históricos, mercado e concorrência.</p>
+          <span class="timeline-sla" style="margin-top:12px;">72h</span>
+        </div>
+        <div class="carousel-card">
+          <div class="carousel-card-number">04</div>
+          <div class="icon-box"><i data-lucide="map" style="width:18px;height:18px;"></i></div>
+          <h3 style="font-size:14px;">Mapeamento de Oportunidades</h3>
+          <p style="font-size:12px;color:var(--gray-50);line-height:1.5;">Quick wins, gargalos estruturais e priorização de canais com maior potencial.</p>
+          <span class="timeline-sla" style="margin-top:12px;">96h</span>
+        </div>
+        <div class="carousel-card">
+          <div class="carousel-card-number">05</div>
+          <div class="icon-box"><i data-lucide="target" style="width:18px;height:18px;"></i></div>
+          <h3 style="font-size:14px;">Planejamento Tático</h3>
+          <p style="font-size:12px;color:var(--gray-50);line-height:1.5;">Definição de metas e KPIs no Compass. Plano de ação detalhado para a FO1.</p>
+          <span class="timeline-sla" style="margin-top:12px;">7 dias</span>
+        </div>
+      </div>
+      <div class="carousel-nav">
+        <button class="carousel-btn" onclick="moveCarousel(this,-1)"><i data-lucide="chevron-left" style="width:16px;height:16px;"></i></button>
+        <button class="carousel-btn" onclick="moveCarousel(this,1)"><i data-lucide="chevron-right" style="width:16px;height:16px;"></i></button>
+        <div class="carousel-dots" data-dots></div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>ATACAMA.DIGITAL</span><span>06 / 15</span></div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 07: ONGOING (carousel horizontal) -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<section class="slide slide--cosmos" id="slide-6" data-nav="Ongoing">
+  <div class="nebula-bg"></div>
+  <div class="grain"></div>
+  <div class="slide-gridlines">
+    <div class="gridline gridline--v gridline--left"></div>
+    <div class="gridline gridline--v gridline--right"></div>
+  </div>
+  <div class="content-full anim-group" style="z-index:2;">
+    <div class="anim section-header">
+      <div class="section-number">07</div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+        <span class="badge badge--purple">Etapa 2</span>
+        <span style="font-size:11px;color:var(--gray-50);">Ciclos de 90 dias</span>
+      </div>
+      <h2>Ongoing</h2>
+      <p class="body-md" style="max-width:600px;">Ciclo contínuo para gerar e manter resultados crescentes. Cada FO (Fase Operacional) dura 90 dias.</p>
+    </div>
+    <div class="anim carousel-wrapper" data-carousel>
+      <div class="carousel-track">
+        <div class="carousel-card">
+          <div class="carousel-card-number">E</div>
+          <div class="icon-box" style="color:var(--cosmos-pink);"><i data-lucide="palette" style="width:18px;height:18px;"></i></div>
+          <h3 style="font-size:14px;">Execução Criativa</h3>
+          <p style="font-size:12px;color:var(--gray-50);line-height:1.5;">A estética potencializa o resultado. Toda peça a serviço da performance e dos indicadores.</p>
+        </div>
+        <div class="carousel-card">
+          <div class="carousel-card-number">M</div>
+          <div class="icon-box" style="color:var(--cosmos-blue-light);"><i data-lucide="activity" style="width:18px;height:18px;"></i></div>
+          <h3 style="font-size:14px;">Monitoramento</h3>
+          <p style="font-size:12px;color:var(--gray-50);line-height:1.5;">Compass + Atacama Performance: dashboards atualizados, testes A/B e otimização diária.</p>
+        </div>
+        <div class="carousel-card">
+          <div class="carousel-card-number">S</div>
+          <div class="icon-box" style="color:var(--cosmos-purple);"><i data-lucide="trending-up" style="width:18px;height:18px;"></i></div>
+          <h3 style="font-size:14px;">Escalonamento</h3>
+          <p style="font-size:12px;color:var(--gray-50);line-height:1.5;">Exploração de novos canais e aumento de investimento com base em lucro validado.</p>
+        </div>
+        <div class="carousel-card" style="background:rgba(158,143,208,0.06);border-color:rgba(158,143,208,0.15);">
+          <div class="carousel-card-number" style="color:rgba(158,143,208,0.1);">R</div>
+          <div class="icon-box" style="color:var(--cosmos-purple);background:rgba(158,143,208,0.1);"><i data-lucide="refresh-cw" style="width:18px;height:18px;"></i></div>
+          <h3 style="font-size:14px;color:var(--cosmos-purple);">Cosmos Review</h3>
+          <p style="font-size:12px;color:var(--gray-50);line-height:1.5;">Dia 90: análise de performance, vitórias, gargalos. Nova tática para a próxima FO.</p>
+        </div>
+      </div>
+      <div class="carousel-nav">
+        <button class="carousel-btn" onclick="moveCarousel(this,-1)"><i data-lucide="chevron-left" style="width:16px;height:16px;"></i></button>
+        <button class="carousel-btn" onclick="moveCarousel(this,1)"><i data-lucide="chevron-right" style="width:16px;height:16px;"></i></button>
+        <div class="carousel-dots" data-dots></div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>ATACAMA.DIGITAL</span><span>07 / 15</span></div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 08: CADÊNCIA DE REUNIÕES -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<section class="slide slide--dark" id="slide-7" data-nav="Cadência">
+  <div class="slide-gridlines">
+    <div class="gridline gridline--v gridline--left"></div>
+    <div class="gridline gridline--v gridline--right"></div>
+    <div class="grid-dot grid-dot--bl"></div>
+    <div class="grid-dot grid-dot--br"></div>
+  </div>
+  <div class="content-full anim-group">
+    <div class="anim section-header">
+      <div class="section-number">08</div>
+      <p class="eyebrow">Como vamos nos comunicar</p>
+      <h2>Cadência de <span class="gradient-text">acompanhamento</span></h2>
+      <p class="body-md" style="max-width:600px;">Nosso ritmo de comunicação evolui conforme o projeto ganha maturidade.</p>
+    </div>
+    <div class="anim cadence-grid" style="margin-top:24px;">
+      <div class="cadence-card">
+        <div class="cadence-icon" style="background:rgba(94,151,228,0.1);"><i data-lucide="calendar-days" style="width:20px;height:20px;color:var(--cosmos-blue-mid);"></i></div>
+        <h3 style="font-size:15px;">Semanal</h3>
+        <p style="font-size:12px;color:var(--gray-50);line-height:1.5;">Primeiras semanas: alinhamento rápido para garantir velocidade no onboarding.</p>
+        <p class="cadence-label">Início</p>
+      </div>
+      <div class="cadence-card">
+        <div class="cadence-icon" style="background:rgba(158,143,208,0.1);"><i data-lucide="calendar-range" style="width:20px;height:20px;color:var(--cosmos-purple);"></i></div>
+        <h3 style="font-size:15px;">Quinzenal</h3>
+        <p style="font-size:12px;color:var(--gray-50);line-height:1.5;">Reuniões de acompanhamento tático e ajustes de rota.</p>
+        <p class="cadence-label">Maturidade</p>
+      </div>
+      <div class="cadence-card">
+        <div class="cadence-icon" style="background:rgba(252,125,142,0.1);"><i data-lucide="bar-chart-3" style="width:20px;height:20px;color:var(--cosmos-pink);"></i></div>
+        <h3 style="font-size:15px;">Mensal</h3>
+        <p style="font-size:12px;color:var(--gray-50);line-height:1.5;">Relatório de performance com análise de indicadores e metas.</p>
+        <p class="cadence-label">Ongoing</p>
+      </div>
+      <div class="cadence-card" style="border-color:rgba(158,143,208,0.2);">
+        <div class="cadence-icon" style="background:rgba(158,143,208,0.1);"><i data-lucide="refresh-cw" style="width:20px;height:20px;color:var(--cosmos-purple);"></i></div>
+        <h3 style="font-size:15px;">Trimestral</h3>
+        <p style="font-size:12px;color:var(--gray-50);line-height:1.5;">Cosmos Review: retrospectiva completa + planejamento da próxima FO.</p>
+        <p class="cadence-label">Cosmos Review</p>
+      </div>
+    </div>
+    <div class="anim card" style="margin-top:20px;max-width:800px;display:flex;gap:16px;align-items:center;">
+      <div class="icon-box" style="margin-bottom:0;flex-shrink:0;"><i data-lucide="message-circle" style="width:18px;height:18px;"></i></div>
+      <div>
+        <h3 style="font-size:14px;margin-bottom:4px;">WhatsApp é nosso canal direto</h3>
+        <p style="font-size:13px;color:var(--gray-50);line-height:1.5;">A comunicação do dia a dia acontece no grupo de WhatsApp do projeto. Dúvidas rápidas, aprovações e alinhamentos — tudo ali.</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>ATACAMA.DIGITAL</span><span>08 / 15</span></div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 09: BRIEFING 1/3 — SOBRE O NEGÓCIO -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<section class="slide slide--silver" id="slide-8" data-nav="Briefing 1/3">
+  <div class="slide-gridlines">
+    <div class="gridline gridline--v gridline--left"></div>
+    <div class="gridline gridline--v gridline--right"></div>
+    <div class="grid-dot grid-dot--tl"></div>
+    <div class="grid-dot grid-dot--tr"></div>
+  </div>
+  <div class="content-full anim-group">
+    <div class="anim section-header">
+      <div class="section-number" style="color:rgba(0,0,0,0.04);">09</div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+        <div class="icon-box" style="margin-bottom:0;"><i data-lucide="building-2" style="width:18px;height:18px;"></i></div>
+        <span class="badge badge--blue" style="background:rgba(27,104,184,0.06);color:var(--cosmos-blue-deep);border-color:rgba(27,104,184,0.12);">Briefing 1/3</span>
+      </div>
+      <p class="eyebrow" style="color:var(--gray-60);">Vamos conversar</p>
+      <h2 style="color:var(--black);">Sobre o negócio</h2>
+    </div>
+    <div class="anim questions-container">
+      <div class="question-block q-hidden"><div class="q-number">1</div><div style="flex:1;"><p class="q-text" style="color:var(--black);">Conte a história do negócio. Como tudo começou? Qual foi a motivação?</p><p class="q-hint"><i data-lucide="book-open"></i> Origem e propósito</p></div></div>
+      <div class="question-block q-hidden"><div class="q-number">2</div><div style="flex:1;"><p class="q-text" style="color:var(--black);">Como era o mundo antes de você existir? O que mudou com a chegada do seu negócio?</p><p class="q-hint"><i data-lucide="lightbulb"></i> Transformação</p></div></div>
+      <div class="question-block q-hidden"><div class="q-number">3</div><div style="flex:1;"><p class="q-text" style="color:var(--black);">Se você desistisse amanhã, o que seus clientes perderiam?</p><p class="q-hint"><i data-lucide="heart"></i> Valor insubstituível</p></div></div>
+      <div class="question-block q-hidden"><div class="q-number">4</div><div style="flex:1;"><p class="q-text" style="color:var(--black);">Qual é o diferencial competitivo? O que faz o cliente escolher você?</p><p class="q-hint"><i data-lucide="trophy"></i> Proposta única de valor</p></div></div>
+      <div class="question-block q-hidden"><div class="q-number">5</div><div style="flex:1;"><p class="q-text" style="color:var(--black);">Quem são seus 3 principais concorrentes? O que eles fazem bem?</p><p class="q-hint"><i data-lucide="swords"></i> Concorrência</p></div></div>
+    </div>
+    <div class="anim"><button class="reveal-btn" onclick="revealNext(this)"><i data-lucide="chevron-down" style="width:14px;height:14px;"></i> Próxima pergunta <span style="font-size:10px;opacity:0.6;">(Space)</span></button></div>
+  </div>
+  <div class="slide-footer"><span>ATACAMA.DIGITAL</span><span>09 / 15</span></div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 10: BRIEFING 2/3 — SOBRE O PÚBLICO -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<section class="slide slide--dark" id="slide-9" data-nav="Briefing 2/3">
+  <div class="slide-gridlines">
+    <div class="gridline gridline--v gridline--left"></div>
+    <div class="gridline gridline--v gridline--right"></div>
+    <div class="grid-dot grid-dot--tl"></div>
+    <div class="grid-dot grid-dot--tr"></div>
+  </div>
+  <div class="content-full anim-group">
+    <div class="anim section-header">
+      <div class="section-number">10</div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+        <div class="icon-box" style="margin-bottom:0;"><i data-lucide="users" style="width:18px;height:18px;"></i></div>
+        <span class="badge badge--blue">Briefing 2/3</span>
+      </div>
+      <p class="eyebrow">Vamos conversar</p>
+      <h2>Sobre o público</h2>
+      <p class="body-md" style="max-width:600px;">Segundo a Nielsen, criativos que refletem o público-alvo geram até 56% mais resultados. Precisamos entender quem é o seu cliente.</p>
+    </div>
+    <div class="anim questions-container">
+      <div class="question-block q-hidden"><div class="q-number">6</div><div style="flex:1;"><p class="q-text">Quem é seu cliente ideal? Idade, gênero, renda, localização, comportamento.</p><p class="q-hint"><i data-lucide="user-check"></i> ICP — Ideal Customer Profile</p></div></div>
+      <div class="question-block q-hidden"><div class="q-number">7</div><div style="flex:1;"><p class="q-text">Qual a principal dor que faz esse cliente procurar você?</p><p class="q-hint"><i data-lucide="heart-pulse"></i> Gatilho de compra</p></div></div>
+      <div class="question-block q-hidden"><div class="q-number">8</div><div style="flex:1;"><p class="q-text">Qual é a objeção mais comum antes de fechar? O que impede a venda?</p><p class="q-hint"><i data-lucide="shield-alert"></i> Barreiras de conversão</p></div></div>
+      <div class="question-block q-hidden"><div class="q-number">9</div><div style="flex:1;"><p class="q-text">De onde vem a maioria dos seus clientes hoje? (Indicação, Google, Instagram, fachada...)</p><p class="q-hint"><i data-lucide="route"></i> Canais de aquisição</p></div></div>
+      <div class="question-block q-hidden"><div class="q-number">10</div><div style="flex:1;"><p class="q-text">Existe sazonalidade? Meses fortes e fracos? Campanhas especiais?</p><p class="q-hint"><i data-lucide="calendar-range"></i> Picos e vales</p></div></div>
+    </div>
+    <div class="anim"><button class="reveal-btn" onclick="revealNext(this)"><i data-lucide="chevron-down" style="width:14px;height:14px;"></i> Próxima pergunta <span style="font-size:10px;opacity:0.6;">(Space)</span></button></div>
+  </div>
+  <div class="slide-footer"><span>ATACAMA.DIGITAL</span><span>10 / 15</span></div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 11: BRIEFING 3/3 — PRESENÇA DIGITAL -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<section class="slide slide--silver" id="slide-10" data-nav="Briefing 3/3">
+  <div class="slide-gridlines">
+    <div class="gridline gridline--v gridline--left"></div>
+    <div class="gridline gridline--v gridline--right"></div>
+  </div>
+  <div class="content-full anim-group">
+    <div class="anim section-header">
+      <div class="section-number" style="color:rgba(0,0,0,0.04);">11</div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+        <div class="icon-box" style="margin-bottom:0;"><i data-lucide="monitor" style="width:18px;height:18px;"></i></div>
+        <span class="badge badge--blue" style="background:rgba(27,104,184,0.06);color:var(--cosmos-blue-deep);border-color:rgba(27,104,184,0.12);">Briefing 3/3</span>
+      </div>
+      <p class="eyebrow" style="color:var(--gray-60);">Vamos conversar</p>
+      <h2 style="color:var(--black);">Presença digital & metas</h2>
+    </div>
+    <div class="anim questions-container">
+      <div class="question-block q-hidden"><div class="q-number">11</div><div style="flex:1;"><p class="q-text" style="color:var(--black);">Quais redes sociais você usa? Como está a frequência e engajamento?</p><p class="q-hint"><i data-lucide="share-2"></i> Presença orgânica</p></div></div>
+      <div class="question-block q-hidden"><div class="q-number">12</div><div style="flex:1;"><p class="q-text" style="color:var(--black);">Já investiu em tráfego pago? Quanto? Quais resultados teve?</p><p class="q-hint"><i data-lucide="bar-chart-3"></i> Histórico de performance</p></div></div>
+      <div class="question-block q-hidden"><div class="q-number">13</div><div style="flex:1;"><p class="q-text" style="color:var(--black);">Possui site? Está satisfeito com ele? O que gostaria de melhorar?</p><p class="q-hint"><i data-lucide="globe"></i> Infraestrutura digital</p></div></div>
+      <div class="question-block q-hidden"><div class="q-number">14</div><div style="flex:1;"><p class="q-text" style="color:var(--black);">Tem referência visual ou marca que admira? Qual o tom de voz ideal?</p><p class="q-hint"><i data-lucide="palette"></i> Identidade e tom</p></div></div>
+      <div class="question-block q-hidden"><div class="q-number">15</div><div style="flex:1;"><p class="q-text" style="color:var(--black);">Qual o ticket médio? Qual o faturamento dos últimos 12 meses? Meta para os próximos?</p><p class="q-hint"><i data-lucide="trending-up"></i> Baseline financeiro</p></div></div>
+    </div>
+    <div class="anim"><button class="reveal-btn" onclick="revealNext(this)"><i data-lucide="chevron-down" style="width:14px;height:14px;"></i> Próxima pergunta <span style="font-size:10px;opacity:0.6;">(Space)</span></button></div>
+  </div>
+  <div class="slide-footer"><span>ATACAMA.DIGITAL</span><span>11 / 15</span></div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 12: CONSTRUÇÃO DE METAS (COMPASS) -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<section class="slide slide--dark" id="slide-11" data-nav="Metas">
+  <div class="slide-gridlines">
+    <div class="gridline gridline--v gridline--left"></div>
+    <div class="gridline gridline--v gridline--right"></div>
+    <div class="grid-dot grid-dot--bl"></div>
+    <div class="grid-dot grid-dot--br"></div>
+  </div>
+  <div class="content-full anim-group">
+    <div class="anim section-header">
+      <div class="section-number">12</div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+        <div class="icon-box" style="margin-bottom:0;"><svg viewBox="0 0 738 627" fill="currentColor" style="width:18px;height:18px;"><path d="M584.43 625.2 456.35 313.6H280.67L152.58 625.2h64.26L339.3 320.6v304.6h58.44V320.6l122.45 304.6zM152.58 1.6l128.09 311.6h175.68L584.43 1.6h-64.25L397.72 306.2V1.6H339.3v304.6L216.84 1.6z"/><path d="m154.9 626.8 244.94-231.33-22.04-57.36-18.95-49.28-22.03-57.36L0 223.7l23.05 59.98 328.26 5.04L66.98 397.97l20.96 54.55 284.33-109.27-240.41 223.57zM582.11 0 337.18 231.34l22.04 57.35 18.94 49.29 22.04 57.35 336.82 7.78-23.05-59.98-328.27-5.04 284.34-109.26-20.96-54.55-284.34 109.27L605.17 59.98z"/></svg></div>
+        <span class="badge badge--purple">Atacama Compass</span>
+      </div>
+      <p class="eyebrow">Construção de metas</p>
+      <h2>Onde você enxerga <span class="gradient-text">crescimento</span>?</h2>
+      <p class="body-md" style="max-width:600px;">Essas respostas calibram o <strong style="color:var(--white);">Compass</strong> — nosso sistema de projeções e acompanhamento de metas.</p>
+    </div>
+    <div class="anim questions-container">
+      <div class="question-block q-hidden"><div class="q-number">16</div><div style="flex:1;"><p class="q-text">Se tudo der certo nos próximos 90 dias, qual resultado você espera?</p><p class="q-hint"><i data-lucide="eye"></i> Visão de sucesso</p></div></div>
+      <div class="question-block q-hidden"><div class="q-number">17</div><div style="flex:1;"><p class="q-text">Qual meta de vendas/faturamento para este trimestre? E como se distribui entre os meses?</p><p class="q-hint"><i data-lucide="bar-chart-3"></i> Projeção financeira</p></div></div>
+      <div class="question-block q-hidden"><div class="q-number">18</div><div style="flex:1;"><p class="q-text">Qual a taxa de conversão do seu funil hoje? De cada 100 leads, quantos viram venda?</p><p class="q-hint"><i data-lucide="filter"></i> Benchmark do funil</p></div></div>
+      <div class="question-block q-hidden"><div class="q-number">19</div><div style="flex:1;"><p class="q-text">Existe evento, lançamento ou data importante nos próximos 90 dias?</p><p class="q-hint"><i data-lucide="calendar-check"></i> Marcos no calendário</p></div></div>
+      <div class="question-block q-hidden"><div class="q-number">20</div><div style="flex:1;"><p class="q-text">O que você considera sucesso neste projeto? Como vamos medir juntos?</p><p class="q-hint"><i data-lucide="target"></i> Definição de sucesso</p></div></div>
+    </div>
+    <div class="anim"><button class="reveal-btn" onclick="revealNext(this)"><i data-lucide="chevron-down" style="width:14px;height:14px;"></i> Próxima pergunta <span style="font-size:10px;opacity:0.6;">(Space)</span></button></div>
+  </div>
+  <div class="slide-footer"><span>ATACAMA.DIGITAL</span><span>12 / 15</span></div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 13: O QUE PRECISAMOS DE VOCÊ (ACESSOS) -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<section class="slide slide--silver" id="slide-12" data-nav="Acessos">
+  <div class="slide-gridlines">
+    <div class="gridline gridline--v gridline--left"></div>
+    <div class="gridline gridline--v gridline--right"></div>
+  </div>
+  <div class="content-full anim-group">
+    <div class="anim section-header">
+      <div class="section-number" style="color:rgba(0,0,0,0.04);">13</div>
+      <div class="icon-box" style="margin-bottom:8px;"><i data-lucide="clipboard-check" style="width:18px;height:18px;"></i></div>
+      <p class="eyebrow" style="color:var(--gray-60);">Coleta de informações</p>
+      <h2 style="color:var(--black);">O que precisamos de você</h2>
+      <p class="body-md" style="max-width:600px;color:var(--gray-60);">Marque o que já está disponível. Pendências serão acompanhadas pela sua CS.</p>
+    </div>
+    <div class="anim content-grid">
+      <div class="card card-accent" style="border-left-color:var(--cosmos-blue-deep);">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+          <div class="icon-box" style="margin-bottom:0;"><i data-lucide="key" style="width:18px;height:18px;"></i></div>
+          <h3 style="color:var(--black);margin-bottom:0;">Acessos</h3>
+        </div>
+        <label class="checklist-item"><input type="checkbox"><span>Instagram (Admin)</span></label>
+        <label class="checklist-item"><input type="checkbox"><span>Facebook / Meta Business (Admin)</span></label>
+        <label class="checklist-item"><input type="checkbox"><span>Google Ads (Administrador)</span></label>
+        <label class="checklist-item"><input type="checkbox"><span>Google Analytics / GA4</span></label>
+        <label class="checklist-item"><input type="checkbox"><span>YouTube (se houver)</span></label>
+        <label class="checklist-item"><input type="checkbox"><span>Google Meu Negócio</span></label>
+        <label class="checklist-item"><input type="checkbox"><span>CRM utilizado (acesso ou integração)</span></label>
+        <label class="checklist-item"><input type="checkbox"><span>WhatsApp comercial (número)</span></label>
+        <label class="checklist-item"><input type="checkbox"><span>Domínio / acesso ao registro</span></label>
+      </div>
+      <div class="card card-accent" style="border-left-color:var(--cosmos-blue-deep);">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+          <div class="icon-box" style="margin-bottom:0;"><i data-lucide="folder-open" style="width:18px;height:18px;"></i></div>
+          <h3 style="color:var(--black);margin-bottom:0;">Materiais</h3>
+        </div>
+        <label class="checklist-item"><input type="checkbox"><span>Logo em alta (PNG/SVG)</span></label>
+        <label class="checklist-item"><input type="checkbox"><span>Manual de marca / brandbook</span></label>
+        <label class="checklist-item"><input type="checkbox"><span>Fotos de produto / equipe / espaço</span></label>
+        <label class="checklist-item"><input type="checkbox"><span>Depoimentos / provas sociais</span></label>
+        <label class="checklist-item"><input type="checkbox"><span>Vídeos existentes</span></label>
+        <label class="checklist-item"><input type="checkbox"><span>Dados de vendas / faturamento</span></label>
+        <label class="checklist-item"><input type="checkbox"><span>Dados de metas internas</span></label>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>ATACAMA.DIGITAL</span><span>13 / 15</span></div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 14: PRÓXIMOS PASSOS -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<section class="slide slide--dark" id="slide-13" data-nav="Próximos Passos">
+  <div class="slide-gridlines">
+    <div class="gridline gridline--v gridline--left"></div>
+    <div class="gridline gridline--v gridline--right"></div>
+    <div class="gridline gridline--h gridline--top"></div>
+    <div class="gridline gridline--h gridline--bottom"></div>
+    <div class="grid-dot grid-dot--tl"></div>
+    <div class="grid-dot grid-dot--tr"></div>
+    <div class="grid-dot grid-dot--bl"></div>
+    <div class="grid-dot grid-dot--br"></div>
+  </div>
+  <div class="content-full anim-group">
+    <div class="anim section-header">
+      <div class="section-number">14</div>
+      <div class="icon-box" style="margin-bottom:8px;"><i data-lucide="arrow-right-circle" style="width:18px;height:18px;"></i></div>
+      <p class="eyebrow">O que acontece agora</p>
+      <h2>Próximos passos</h2>
+    </div>
+    <div class="anim timeline">
+      <div class="timeline-item">
+        <div class="timeline-content">
+          <h3><i data-lucide="check" style="width:14px;height:14px;color:var(--cosmos-blue-light);display:inline;vertical-align:middle;margin-right:4px;"></i> Hoje: Kick-off concluído</h3>
+          <p>Briefing coletado. Informações serão processadas pela equipe.</p>
+          <span class="timeline-sla" style="background:rgba(94,151,228,0.15);">Concluído</span>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-content">
+          <h3>Até <span class="editable" contenteditable="true">[DATA +5 dias]</span>: DNA Estratégico</h3>
+          <p>Posicionamento, tom de voz e linhas editoriais definidas.</p>
+          <span class="timeline-sla">5 dias úteis</span>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-content">
+          <h3>Até <span class="editable" contenteditable="true">[DATA +7 dias]</span>: Calendário editorial</h3>
+          <p>Primeiro mês de conteúdo planejado e aprovado.</p>
+          <span class="timeline-sla">7 dias úteis</span>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-content">
+          <h3>Até <span class="editable" contenteditable="true">[DATA +10 dias]</span>: Diária AV + conteúdo ao ar</h3>
+          <p>Produção audiovisual realizada, primeiros posts publicados.</p>
+          <span class="timeline-sla">10 dias úteis</span>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-content">
+          <h3 style="color:var(--cosmos-purple);">Dia 90: Cosmos Review</h3>
+          <p>Retrospectiva completa. Planejamento da próxima FO.</p>
+          <span class="timeline-sla" style="background:rgba(158,143,208,0.1);color:var(--cosmos-purple);">Cosmos Review</span>
+        </div>
+      </div>
+    </div>
+    <div class="anim card" style="margin-top:20px;border-left:3px solid var(--cosmos-blue-mid);max-width:800px;">
+      <div style="display:flex;gap:16px;align-items:center;">
+        <div class="icon-box" style="margin-bottom:0;flex-shrink:0;"><i data-lucide="calendar-check" style="width:18px;height:18px;"></i></div>
+        <div>
+          <p style="font-size:12px;color:var(--gray-50);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px;">Data de entrega do DNA Estratégico</p>
+          <p style="font-size:24px;font-weight:800;letter-spacing:-0.02em;"><span class="editable" contenteditable="true">[DATA DE ENTREGA]</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>ATACAMA.DIGITAL</span><span>14 / 15</span></div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 15: ENCERRAMENTO -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<section class="slide slide--cosmos" id="slide-14" data-nav="Encerramento">
+  <div class="nebula-bg"></div>
+  <div class="grain"></div>
+  <div class="slide-gridlines">
+    <div class="gridline gridline--v gridline--left"></div>
+    <div class="gridline gridline--v gridline--right"></div>
+    <div class="gridline gridline--h gridline--top"></div>
+    <div class="gridline gridline--h gridline--bottom"></div>
+    <div class="grid-dot grid-dot--tl"></div>
+    <div class="grid-dot grid-dot--tr"></div>
+    <div class="grid-dot grid-dot--bl"></div>
+    <div class="grid-dot grid-dot--br"></div>
+  </div>
+  <div class="anim-group" style="display:flex;flex-direction:column;align-items:center;z-index:2;">
+    <div class="anim" style="margin-bottom:24px;">
+      <svg viewBox="0 0 1211 1250" fill="currentColor" style="width:44px;height:44px;color:var(--cosmos-blue-light);opacity:0.5;animation:floatSlow 5s ease-in-out infinite;"><path d="M731.04 750.75H474.85l-186.77 453.94h93.7l178.57-443.74v443.73h85.2V760.95l178.57 443.74h93.7z"/><path d="M731.05 494.56v89.6l.01-.01v77h-.01v89.6L1185 937.53v-93.71L741.25 665.26h443.74v-85.21H741.25L1185 401.48v-93.7z"/><path d="M474.86 494.56h89.6v-.01h77v.01h89.59L917.83 40.62h-93.7L645.56 484.36V40.62h-85.21v443.74L381.79 40.62h-93.7zM474.85 750.75V494.56L20.91 307.78v93.7l443.74 178.57H20.91v85.21h443.74L20.91 843.82v93.7z"/></svg>
+    </div>
+    <p class="anim tagline" style="font-size:44px;margin-bottom:16px;">Welcome to Clarity.</p>
+    <p class="anim body-lg" style="max-width:460px;text-align:center;">O plano define o destino.<br>A execução dita a velocidade.</p>
+    <div class="anim" style="width:48px;height:1px;background:linear-gradient(90deg,var(--cosmos-blue-mid),transparent);margin:24px auto;"></div>
+    <div class="anim" style="margin-bottom:4px;">
+      <svg viewBox="0 0 7440 1990" fill="currentColor" style="height:20px;width:auto;color:white;"><path d="m2005.83 38.68-307.87 1154h217.33L2217.95 58.23l302.65 1134.45h217.34l-307.87-1154ZM333.85 38.68l-307.87 1154h217.34L545.97 58.23l302.66 1134.45h217.33L758.1 38.68ZM4201.22 38.68l-307.87 1154h217.34L4413.34 58.23 4716 1192.68h217.34l-307.88-1154ZM1789.08 38.68H986.93V233h292.17v959.67h216.6V233.01h293.38ZM6686.55 38.68l-307.87 1154h217.34L6898.68 58.23l302.65 1134.45h217.34l-307.87-1154ZM5666.44 669.03 5490.98 38.7l-424.07-.03v1154h216.61V76.19l170.24 611.58h425.36l170.24-611.58v1116.49h216.6v-1154l-424.06.03ZM3524.06 969.29c-57.57 37.2-122.85 54.25-184.81 54.25-70.32 0-135.16-17.8-192.72-52.89-118.62-72.31-186.66-201.97-186.66-355.72 0-217.76 130.5-319.58 186.6-353.25 57.61-34.59 122.47-52.12 192.78-52.12 6.32 0 98.34.97 184.8 52.06 117.68 69.54 140.24 189.95 140.24 189.95h216.55c0-.02-8.62-118.66-96.5-230.45-102.2-130-264.43-204.57-445.1-204.57-108.53 0-208.94 26.43-298.4 78.57-85.13 49.6-156.39 120.44-206.07 204.88-54.76 93.06-82.53 199.02-82.53 314.93 0 220.57 107.87 415.8 288.55 522.21 89.45 52.7 189.87 79.41 298.46 79.41 177.7 0 341.62-77.36 443.55-210.35 87.52-114.2 101.64-240.9 101.64-240.9h-218.88s-21.46 126.43-141.5 203.99"/><path d="M5012.48 1887.38h-75.22v-346.3h77.6c144.03 0 156.54 111.7 156.54 172.81 0 164.66-109.64 173.5-158.92 173.5m7.8-425.6h-174.51v504.88h171.45c227.25 0 244.65-191.38 244.65-252.78 0-130.66-67.39-252.1-241.6-252.1M5339.53 1966.67h91.49V1461.8h-91.5ZM5752.3 1774.21h119.48c-.28 29.05-15.86 117.24-128.28 117.24-38.57 0-142.66-16.75-142.66-177.56 0-112.15 59.46-176.87 142.66-176.87 69.86 0 109.38 42.84 121.64 86.07h92.84c-10.4-67.22-72.64-168.07-215.84-168.07-77.48 0-233.12 45.2-233.12 259.9 0 75.01 35.51 258.53 233.8 258.53 62.3 0 108.1-23.47 144-65.74h2.38l6.78 58.96h65.73v-263.96h-209.4ZM6041.07 1966.67h91.48V1461.8h-91.48ZM6603.62 1461.8h-402.55v76.58h156.2v428.3h90.48v-428.3h155.87ZM6742.38 1768.79l68-203.3h4.07l68.34 203.3Zm14.12-307-178.23 504.88h97.93l41.7-124.69h189.49l41.91 124.7h97.59l-177.9-504.88ZM7196.05 1890.1v-428.3h-91.49v504.87h314.1v-76.58Z"/></svg>
+    </div>
+    <div class="anim contact-grid">
+      <div class="contact-item"><i data-lucide="user" style="width:16px;height:16px;"></i><span>Eduardo Gouveia</span><span style="font-size:10px;color:var(--gray-70);">CEO</span></div>
+      <div class="contact-item"><i data-lucide="mail" style="width:16px;height:16px;"></i><a href="mailto:contato@atacama.digital">contato@atacama.digital</a></div>
+      <div class="contact-item"><i data-lucide="globe" style="width:16px;height:16px;"></i><a href="https://atacama.digital">atacama.digital</a></div>
+      <div class="contact-item"><i data-lucide="instagram" style="width:16px;height:16px;"></i><a href="#">@agenciaatacama</a></div>
+    </div>
+    <div class="anim partner-row" style="justify-content:center;margin-top:16px;">
+      <div class="partner-badge"><i data-lucide="award" style="width:12px;height:12px;color:var(--cosmos-blue-light);"></i> Google Partner Premier</div>
+      <div class="partner-badge"><i data-lucide="award" style="width:12px;height:12px;color:var(--cosmos-blue-light);"></i> Meta Business Partner</div>
+      <div class="partner-badge"><i data-lucide="award" style="width:12px;height:12px;color:var(--cosmos-blue-light);"></i> RD Station</div>
+    </div>
+  </div>
+  <p style="font-size:10px;color:var(--gray-70);letter-spacing:0.15em;margin-top:40px;z-index:2;">8&deg;02'36.6" S / 34&deg;53'53.5" W</p>
+  <div class="slide-footer"><span>ATACAMA.DIGITAL</span><span>15 / 15</span></div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- JAVASCRIPT -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<script>
+const slides = document.querySelectorAll('.slide');
+const totalSlides = slides.length;
+const navEl = document.getElementById('nav');
+const progressBar = document.getElementById('progressBar');
+const slideCounter = document.getElementById('slideCounter');
+const clientInput = document.getElementById('clientNameInput');
+
+// Build nav dots
+slides.forEach((s, i) => {
+  const label = s.dataset.nav || 'Slide ' + (i+1);
+  const btn = document.createElement('button');
+  btn.className = 'nav-item' + (i === 0 ? ' active' : '');
+  btn.onclick = () => goToSlide(i);
+  btn.innerHTML = '<span class="nav-label">' + label + '</span><span class="nav-dot"></span>';
+  navEl.appendChild(btn);
+});
+const navItems = navEl.querySelectorAll('.nav-item');
+
+function goToSlide(i) { slides[i].scrollIntoView({ behavior: 'smooth' }); }
+
+// Client name sync
+clientInput.addEventListener('input', () => {
+  const val = clientInput.value || 'CLIENTE';
+  document.querySelectorAll('.client-name-display').forEach(el => { el.textContent = val; });
+});
+
+// Nav observer
+const navObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const i = Array.from(slides).indexOf(e.target);
+      navItems.forEach((item, j) => item.classList.toggle('active', j === i));
+      slideCounter.textContent = String(i + 1).padStart(2, '0') + ' / ' + totalSlides;
+      progressBar.style.width = ((i + 1) / totalSlides * 100) + '%';
+    }
+  });
+}, { threshold: 0.5 });
+slides.forEach(s => navObs.observe(s));
+
+// Animation observer
+const animObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.15 });
+document.querySelectorAll('.anim-group').forEach(el => animObs.observe(el));
+
+// Progressive question reveal
+function revealNext(btn) {
+  const container = btn.closest('.content-full, .anim-group').querySelector('.questions-container');
+  if (!container) return;
+  const hidden = container.querySelector('.q-hidden');
+  if (hidden) {
+    hidden.classList.remove('q-hidden');
+    hidden.classList.add('q-revealing');
+  } else {
+    btn.style.opacity = '0.3';
+    btn.style.pointerEvents = 'none';
+    btn.innerHTML = '<i data-lucide="check" style="width:14px;height:14px;"></i> Todas reveladas';
+    lucide.createIcons();
+  }
+}
+
+// Keyboard navigation
+document.addEventListener('keydown', (e) => {
+  if (e.target.isContentEditable || e.target.tagName === 'INPUT') return;
+  const ci = Array.from(navItems).findIndex(d => d.classList.contains('active'));
+  const currentSlide = slides[ci];
+  const container = currentSlide ? currentSlide.querySelector('.questions-container') : null;
+  if (e.key === ' ' || e.key === 'Enter') {
+    if (container) {
+      const hidden = container.querySelector('.q-hidden');
+      if (hidden) {
+        e.preventDefault();
+        const btn = currentSlide.querySelector('.reveal-btn');
+        if (btn) revealNext(btn);
+        return;
+      }
+    }
+    e.preventDefault();
+    if (ci < totalSlides - 1) goToSlide(ci + 1);
+  }
+  if (['ArrowDown','ArrowRight'].includes(e.key)) { e.preventDefault(); if (ci < totalSlides - 1) goToSlide(ci + 1); }
+  if (['ArrowUp','ArrowLeft'].includes(e.key)) { e.preventDefault(); if (ci > 0) goToSlide(ci - 1); }
+});
+
+// Carousel logic
+function moveCarousel(btn, dir) {
+  const wrapper = btn.closest('.carousel-wrapper');
+  const track = wrapper.querySelector('.carousel-track');
+  const cards = track.querySelectorAll('.carousel-card');
+  const dots = wrapper.querySelectorAll('.carousel-dot');
+  let idx = parseInt(track.dataset.idx || '0');
+  idx = Math.max(0, Math.min(cards.length - 1, idx + dir));
+  track.dataset.idx = idx;
+  const cardW = cards[0].offsetWidth + 16;
+  const maxScroll = track.scrollWidth - wrapper.offsetWidth;
+  const scroll = Math.min(idx * cardW, maxScroll);
+  track.style.transform = 'translateX(-' + scroll + 'px)';
+  dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+}
+
+// Init carousels
+document.querySelectorAll('[data-carousel]').forEach(wrapper => {
+  const track = wrapper.querySelector('.carousel-track');
+  const cards = track.querySelectorAll('.carousel-card');
+  const dotsContainer = wrapper.querySelector('[data-dots]');
+  track.dataset.idx = '0';
+  cards.forEach((_, i) => {
+    const dot = document.createElement('span');
+    dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+    dotsContainer.appendChild(dot);
+  });
+});
+
+// Init
+lucide.createIcons();
+setTimeout(() => {
+  document.querySelectorAll('#slide-0 .anim-group').forEach(g => g.classList.add('visible'));
+}, 100);
+</script>
+</body>
+</html>
